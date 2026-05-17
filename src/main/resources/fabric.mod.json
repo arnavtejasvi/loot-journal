@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "lootjournal",
+  "version": "${version}",
+  "name": "Loot Journal",
+  "description": "Tracks block breaks and attributed item drops per session. Compatible with any loot randomizer.",
+  "authors": ["arnav"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.arnav.lootjournal.LootJournalClient"]
+  },
+  "mixins": ["lootjournal.client.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1"
+  }
+}

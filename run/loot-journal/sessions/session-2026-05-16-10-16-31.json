@@ -1,0 +1,106 @@
+{
+  "worldName": "New World",
+  "startTime": "2026-05-16T10:16:31.936497",
+  "endTime": "2026-05-16T10:53:08.614934",
+  "durationMinutes": 36,
+  "totalGained": {
+    "item.minecraft.wheat_seeds": 1,
+    "block.minecraft.dirt": 12
+  },
+  "totalLost": {
+    "block.minecraft.dirt": 12
+  },
+  "unattributedGains": {},
+  "xpGained": 0,
+  "blockAggregates": {
+    "minecraft:stone": {
+      "totalBroken": 1,
+      "attributedDrops": {}
+    },
+    "minecraft:dirt": {
+      "totalBroken": 28,
+      "attributedDrops": {
+        "block.minecraft.dirt": 8
+      }
+    },
+    "minecraft:grass_block": {
+      "totalBroken": 13,
+      "attributedDrops": {
+        "item.minecraft.wheat_seeds": 1,
+        "block.minecraft.dirt": 4
+      }
+    }
+  },
+  "breakEvents": [
+    {
+      "blockId": "minecraft:grass_block",
+      "x": 6,
+      "y": 85,
+      "z": 2,
+      "tickTime": 203,
+      "drops": {
+        "item.minecraft.wheat_seeds": 1
+      }
+    },
+    {
+      "blockId": "minecraft:grass_block",
+      "x": 8,
+      "y": 85,
+      "z": 7,
+      "tickTime": 506,
+      "drops": {
+        "block.minecraft.dirt": 3
+      }
+    },
+    {
+      "blockId": "minecraft:dirt",
+      "x": 8,
+      "y": 85,
+      "z": 9,
+      "tickTime": 614,
+      "drops": {
+        "block.minecraft.dirt": 3
+      }
+    },
+    {
+      "blockId": "minecraft:dirt",
+      "x": 8,
+      "y": 85,
+      "z": 10,
+      "tickTime": 635,
+      "drops": {
+        "block.minecraft.dirt": 1
+      }
+    },
+    {
+      "blockId": "minecraft:dirt",
+      "x": 9,
+      "y": 85,
+      "z": 10,
+      "tickTime": 680,
+      "drops": {
+        "block.minecraft.dirt": 3
+      }
+    },
+    {
+      "blockId": "minecraft:grass_block",
+      "x": 9,
+      "y": 86,
+      "z": 10,
+      "tickTime": 704,
+      "drops": {
+        "block.minecraft.dirt": 1
+      }
+    },
+    {
+      "blockId": "minecraft:dirt",
+      "x": 8,
+      "y": 86,
+      "z": 10,
+      "tickTime": 725,
+      "drops": {
+        "block.minecraft.dirt": 1
+      }
+    }
+  ]
+}

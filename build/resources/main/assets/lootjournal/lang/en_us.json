@@ -1,0 +1,11 @@
+{
+  "lootjournal.key.show_report": "Show Session Report",
+  "lootjournal.key.open_settings": "Open Settings",
+  "lootjournal.key.category": "Loot Journal",
+  "lootjournal.summary.header": "§6=== Loot Journal Session Summary ===",
+  "lootjournal.summary.gained": "§aGained: %s",
+  "lootjournal.summary.lost": "§cLost: %s",
+  "lootjournal.summary.xp": "§eXP gained: +%d",
+  "lootjournal.summary.blocks": "§7Blocks broken: %d type(s)",
+  "lootjournal.summary.session_saved": "§7Session saved to loot-journal/sessions/"
+}

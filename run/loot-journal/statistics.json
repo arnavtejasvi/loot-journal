@@ -1,0 +1,32 @@
+{
+  "lastUpdated": "2026-05-16T10:53:08.642069",
+  "totalSessions": 1,
+  "blockStatistics": {
+    "minecraft:stone": {
+      "totalBroken": 1,
+      "dropFrequencies": {}
+    },
+    "minecraft:dirt": {
+      "totalBroken": 28,
+      "dropFrequencies": {
+        "block.minecraft.dirt": {
+          "count": 8,
+          "frequency": 0.2857142857142857
+        }
+      }
+    },
+    "minecraft:grass_block": {
+      "totalBroken": 13,
+      "dropFrequencies": {
+        "item.minecraft.wheat_seeds": {
+          "count": 1,
+          "frequency": 0.07692307692307693
+        },
+        "block.minecraft.dirt": {
+          "count": 4,
+          "frequency": 0.3076923076923077
+        }
+      }
+    }
+  }
+}
