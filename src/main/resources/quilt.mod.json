@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "com.arnav.lootjournal",
+    "id": "lootjournal",
+    "version": "${version}",
+    "metadata": {
+      "name": "Loot Journal",
+      "description": "Tracks block breaks and attributed item drops per session.",
+      "contributors": { "arnav": "Owner" },
+      "license": "MIT"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "client_init": ["com.arnav.lootjournal.LootJournalClient"]
+    },
+    "depends": [
+      { "id": "quilt_loader", "versions": ">=0.19.0" },
+      { "id": "quilted_fabric_api", "versions": "*" },
+      { "id": "minecraft", "versions": "~1.21.1" }
+    ]
+  },
+  "mixin": ["lootjournal.client.mixins.json"]
+}

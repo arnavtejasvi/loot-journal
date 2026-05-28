@@ -17,9 +17,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 @Environment(EnvType.CLIENT)
 public final class JsonExporter {
@@ -102,6 +106,26 @@ public final class JsonExporter {
         } catch (IOException e) {
             System.err.println("[LootJournal] Failed to update statistics: " + e.getMessage());
         }
+    }
+
+    public static List<SessionReport> loadRecentSessions(int max) {
+        List<SessionReport> results = new ArrayList<>();
+        Path dir = baseDir().resolve("sessions");
+        if (!Files.isDirectory(dir)) return results;
+        try (Stream<Path> files = Files.list(dir)) {
+            files.filter(p -> p.getFileName().toString().endsWith(".json"))
+                 .sorted(Comparator.reverseOrder())
+                 .limit(max)
+                 .forEach(p -> {
+                     try (Reader r = Files.newBufferedReader(p, StandardCharsets.UTF_8)) {
+                         SessionReport report = GSON.fromJson(r, SessionReport.class);
+                         if (report != null) results.add(report);
+                     } catch (Exception ignored) {}
+                 });
+        } catch (IOException e) {
+            System.err.println("[LootJournal] Failed to list sessions: " + e.getMessage());
+        }
+        return results;
     }
 
     private static Path baseDir() {

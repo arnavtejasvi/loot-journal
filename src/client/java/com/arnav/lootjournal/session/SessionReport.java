@@ -8,17 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Environment(EnvType.CLIENT)
 public class SessionReport {
     public String worldName;
     public String startTime;
     public String endTime;
+    public long durationSeconds;
     public long durationMinutes;
 
     public Map<String, Integer> totalGained = new HashMap<>();
     public Map<String, Integer> totalLost = new HashMap<>();
     public Map<String, Integer> unattributedGains = new HashMap<>();
+    public Map<String, Integer> mobKills = new ConcurrentHashMap<>();
     public int xpGained;
 
     public Map<String, BlockTypeAggregate> blockAggregates = new HashMap<>();

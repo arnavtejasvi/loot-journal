@@ -14,12 +14,9 @@ public record InventorySnapshot(Map<String, Integer> items, int totalXp) {
 
     public static InventorySnapshot of(PlayerEntity player) {
         Map<String, Integer> counts = new HashMap<>();
-        List<ItemStack> allSlots = new java.util.ArrayList<>();
-        player.getInventory().main.forEach(allSlots::add);
-        player.getInventory().armor.forEach(allSlots::add);
-        player.getInventory().offHand.forEach(allSlots::add);
-
-        for (ItemStack stack : allSlots) {
+        var inv = player.getInventory();
+        for (int i = 0; i < inv.size(); i++) {
+            ItemStack stack = inv.getStack(i);
             if (stack.isEmpty()) continue;
             String key = stack.getItem().getTranslationKey();
             counts.merge(key, stack.getCount(), Integer::sum);
