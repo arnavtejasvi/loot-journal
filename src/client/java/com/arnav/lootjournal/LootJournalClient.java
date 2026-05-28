@@ -6,7 +6,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 
 @Environment(EnvType.CLIENT)
 public class LootJournalClient implements ClientModInitializer {
@@ -31,11 +34,20 @@ public class LootJournalClient implements ClientModInitializer {
             if (LootJournalKeys.showReport != null && LootJournalKeys.showReport.wasPressed()) {
                 SessionTracker.printMidSessionReport(client);
             }
-
             if (LootJournalKeys.openSettings != null && LootJournalKeys.openSettings.wasPressed()
                     && client.currentScreen == null) {
                 client.setScreen(new LootJournalConfigScreen(null));
             }
+            if (LootJournalKeys.openHistory != null && LootJournalKeys.openHistory.wasPressed()
+                    && client.currentScreen == null) {
+                client.setScreen(new SessionHistoryScreen(null));
+            }
+        });
+
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+            if (entity instanceof PlayerEntity) return;
+            String entityTypeId = Registries.ENTITY_TYPE.getId(entity.getType()).toString();
+            SessionTracker.onMobKilled(entityTypeId);
         });
     }
 
