@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
 public class LootJournalClient implements ClientModInitializer {
@@ -28,23 +28,26 @@ public class LootJournalClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             SessionTracker.tick(client);
 
-            if (LootJournalKeys.showReport != null && LootJournalKeys.showReport.wasPressed()) {
-                SessionTracker.printMidSessionReport(client);
+            if (LootJournalKeys.showReport != null) {
+                while (LootJournalKeys.showReport.consumeClick()) {
+                    SessionTracker.printMidSessionReport(client);
+                }
             }
 
-            if (LootJournalKeys.openSettings != null && LootJournalKeys.openSettings.wasPressed()
-                    && client.currentScreen == null) {
-                client.setScreen(new LootJournalConfigScreen(null));
+            if (LootJournalKeys.openSettings != null && client.screen == null) {
+                while (LootJournalKeys.openSettings.consumeClick()) {
+                    client.setScreen(new LootJournalConfigScreen(null));
+                }
             }
         });
     }
 
-    private String resolveWorldName(MinecraftClient client) {
-        if (client.getCurrentServerEntry() != null) {
-            return client.getCurrentServerEntry().address;
+    private String resolveWorldName(Minecraft client) {
+        if (client.getCurrentServer() != null) {
+            return client.getCurrentServer().ip;
         }
-        if (client.getServer() != null) {
-            return client.getServer().getSaveProperties().getLevelName();
+        if (client.getSingleplayerServer() != null) {
+            return "singleplayer";
         }
         return "unknown";
     }

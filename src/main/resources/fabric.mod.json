@@ -11,10 +11,16 @@
   "entrypoints": {
     "client": ["com.arnav.lootjournal.LootJournalClient"]
   },
-  "mixins": ["lootjournal.client.mixins.json"],
+  "mixins": [
+    {
+      "config": "lootjournal.client.mixins.json",
+      "environment": "client"
+    }
+  ],
   "depends": {
-    "fabricloader": ">=0.19.2",
-    "fabric-api": "*",
-    "minecraft": "~1.21.1"
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
   }
 }

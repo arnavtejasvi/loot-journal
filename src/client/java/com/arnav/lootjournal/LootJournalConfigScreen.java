@@ -2,11 +2,12 @@ package com.arnav.lootjournal;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
@@ -16,43 +17,38 @@ public class LootJournalConfigScreen extends Screen {
     private int windowLabelY;
 
     public LootJournalConfigScreen(Screen parent) {
-        super(Text.literal("Loot Journal Settings"));
+        super(Component.literal("Loot Journal Settings"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        int cx    = this.width / 2;
-        int y     = 32;
-        int gap   = 24;
+        int cx  = this.width / 2;
+        int y   = 32;
+        int gap = 24;
 
-        // Master toggle
         addToggle(cx, y, "Loot Journal Enabled", LootJournalConfig.enabled,
                 v -> LootJournalConfig.enabled = v);
         y += gap;
 
-        // ── Block Randomizer Mode ─────────────────────────────────────────────
-        // Rebuilds the screen so the dependent BR feedback button reflects the new state.
-        this.addDrawableChild(ButtonWidget.builder(brModeText(), btn -> {
+        this.addRenderableWidget(Button.builder(brModeText(), btn -> {
             LootJournalConfig.blockRandomizerMode = !LootJournalConfig.blockRandomizerMode;
             if (LootJournalConfig.blockRandomizerMode
                     && LootJournalConfig.attributionWindowTicks < 100) {
                 LootJournalConfig.attributionWindowTicks = 100;
             }
-            this.clearAndInit();
-        }).position(cx - 100, y).size(200, 20).build());
+            this.rebuildWidgets();
+        }).pos(cx - 100, y).size(200, 20).build());
         y += gap;
 
-        // BR feedback — greyed out when BR mode is off
-        ButtonWidget brFeedbackBtn = ButtonWidget.builder(brFeedbackText(), btn -> {
+        Button brFeedbackBtn = Button.builder(brFeedbackText(), btn -> {
             LootJournalConfig.brFeedbackInChat = !LootJournalConfig.brFeedbackInChat;
             btn.setMessage(brFeedbackText());
-        }).position(cx - 100, y).size(200, 20).build();
+        }).pos(cx - 100, y).size(200, 20).build();
         brFeedbackBtn.active = LootJournalConfig.blockRandomizerMode;
-        this.addDrawableChild(brFeedbackBtn);
+        this.addRenderableWidget(brFeedbackBtn);
         y += gap;
 
-        // ── General output options ────────────────────────────────────────────
         addToggle(cx, y, "Summary on Disconnect",
                 LootJournalConfig.showSummaryOnDisconnect,
                 v -> LootJournalConfig.showSummaryOnDisconnect = v);
@@ -73,68 +69,61 @@ public class LootJournalConfigScreen extends Screen {
                 v -> LootJournalConfig.writeBreakEvents = v);
         y += gap;
 
-        // ── Attribution window ±20 ticks ──────────────────────────────────────
         windowLabelY = y + 5;
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("  -  "), btn ->
+        this.addRenderableWidget(Button.builder(Component.literal("  -  "), btn ->
                 LootJournalConfig.attributionWindowTicks =
                         Math.max(20, LootJournalConfig.attributionWindowTicks - 20))
-                .position(cx - 100, y).size(40, 20).build());
+                .pos(cx - 100, y).size(40, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("  +  "), btn ->
+        this.addRenderableWidget(Button.builder(Component.literal("  +  "), btn ->
                 LootJournalConfig.attributionWindowTicks =
                         Math.min(200, LootJournalConfig.attributionWindowTicks + 20))
-                .position(cx + 60, y).size(40, 20).build());
+                .pos(cx + 60, y).size(40, 20).build());
 
-        // ── Done ─────────────────────────────────────────────────────────────
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, btn -> close())
-                .position(cx - 100, this.height - 27).size(200, 20).build());
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, btn -> onClose())
+                .pos(cx - 100, this.height - 27).size(200, 20).build());
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
-        // Title
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title,
-                this.width / 2, 15, 0xFFFFFF);
-        // Attribution window label — redrawn every frame so it reflects live value
-        context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("Attribution Window: " + LootJournalConfig.attributionWindowTicks + " ticks"),
-                this.width / 2, windowLabelY, 0xAAAAAA);
+    public void extractRenderState(GuiGraphicsExtractor ctx, int mouseX, int mouseY, float delta) {
+        ctx.fill(0, 0, this.width, this.height, 0xC0000000);
+        super.extractRenderState(ctx, mouseX, mouseY, delta);
+        int cx = this.width / 2;
+        ctx.centeredText(this.getFont(), this.title, cx, 15, 0xFFFFFF);
+        ctx.centeredText(this.getFont(),
+                Component.literal("Attribution Window: " + LootJournalConfig.attributionWindowTicks + " ticks"),
+                cx, windowLabelY, 0xAAAAAA);
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         LootJournalConfig.save();
-        assert this.client != null;
-        this.client.setScreen(this.parent);
+        Minecraft.getInstance().setScreen(this.parent);
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void addToggle(int cx, int y, String label, boolean initial, Consumer<Boolean> setter) {
         boolean[] state = {initial};
-        this.addDrawableChild(ButtonWidget.builder(
+        this.addRenderableWidget(Button.builder(
                 toggleText(label, state[0]),
                 btn -> {
                     state[0] = !state[0];
                     setter.accept(state[0]);
                     btn.setMessage(toggleText(label, state[0]));
                 }
-        ).position(cx - 100, y).size(200, 20).build());
+        ).pos(cx - 100, y).size(200, 20).build());
     }
 
-    private static Text toggleText(String label, boolean on) {
-        return Text.literal(label + ": " + (on ? "§aON" : "§cOFF"));
+    private static Component toggleText(String label, boolean on) {
+        return Component.literal(label + ": " + (on ? "§aON" : "§cOFF"));
     }
 
-    private static Text brModeText() {
-        return Text.literal("Block Randomizer Mode: " +
+    private static Component brModeText() {
+        return Component.literal("Block Randomizer Mode: " +
                 (LootJournalConfig.blockRandomizerMode ? "§aON" : "§cOFF"));
     }
 
-    private static Text brFeedbackText() {
-        return Text.literal("Drop Feedback in Chat: " +
+    private static Component brFeedbackText() {
+        return Component.literal("Drop Feedback in Chat: " +
                 (LootJournalConfig.brFeedbackInChat ? "§aON" : "§cOFF"));
     }
 }

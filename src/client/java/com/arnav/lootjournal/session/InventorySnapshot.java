@@ -2,26 +2,20 @@ package com.arnav.lootjournal.session;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public record InventorySnapshot(Map<String, Integer> items, int totalXp) {
 
-    public static InventorySnapshot of(PlayerEntity player) {
+    public static InventorySnapshot of(Player player) {
         Map<String, Integer> counts = new HashMap<>();
-        List<ItemStack> allSlots = new java.util.ArrayList<>();
-        player.getInventory().main.forEach(allSlots::add);
-        player.getInventory().armor.forEach(allSlots::add);
-        player.getInventory().offHand.forEach(allSlots::add);
-
-        for (ItemStack stack : allSlots) {
+        for (ItemStack stack : player.getInventory()) {
             if (stack.isEmpty()) continue;
-            String key = stack.getItem().getTranslationKey();
+            String key = stack.getItem().getDescriptionId();
             counts.merge(key, stack.getCount(), Integer::sum);
         }
         return new InventorySnapshot(counts, player.totalExperience);

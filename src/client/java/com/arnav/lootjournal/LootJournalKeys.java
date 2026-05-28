@@ -2,30 +2,34 @@ package com.arnav.lootjournal;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
+import com.mojang.blaze3d.platform.InputConstants;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public final class LootJournalKeys {
-    public static KeyBinding showReport;
-    public static KeyBinding openSettings;
+    static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(
+            Identifier.fromNamespaceAndPath("lootjournal", "key"));
+
+    public static KeyMapping showReport;
+    public static KeyMapping openSettings;
 
     private LootJournalKeys() {}
 
     public static void register() {
-        showReport = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        showReport = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "lootjournal.key.show_report",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
-                "lootjournal.key.category"
+                CATEGORY
         ));
-        openSettings = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        openSettings = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "lootjournal.key.open_settings",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN, // unbound by default — user assigns in Controls
-                "lootjournal.key.category"
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                CATEGORY
         ));
     }
 }
