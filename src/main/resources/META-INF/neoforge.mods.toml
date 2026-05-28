@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+    modId="lootjournal"
+    version="${mod_version}"
+    displayName="Loot Journal"
+    description="Tracks block breaks and attributed item drops per session. Compatible with any loot randomizer."
+
+[[dependencies.lootjournal]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.11,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.lootjournal]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.11,1.22)"
+    ordering="NONE"
+    side="BOTH"
+
+[[mixins]]
+    config="lootjournal.mixins.json"
